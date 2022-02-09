@@ -29,9 +29,9 @@ interface IProps {
        </button>
       <div className='grid  grid-cols-2 ' >
       <input type='text' defaultValue={item.name} onChange={handleItemText}/>
-      <button className='border-2 border-red-600 text-neutral-800 px-3 text-base hover:bg-red-400 active:bg-red-500'  onClick={()=>OnEdit(item.id,inputText)}>
+      <button className='px-3 '  onClick={()=>OnEdit(item.id,inputText)}>
          
-         Save Edit
+         🛠️ 
        </button>
       </div>
       </div>
