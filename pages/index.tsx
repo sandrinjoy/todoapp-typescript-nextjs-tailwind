@@ -100,6 +100,17 @@ export default function IndexPage() {
   
       
   }
+  const addRadomItem = () =>{
+  fetch('https://random-data-api.com/api/food/random_food')
+                  .then(res=>res.json())
+                  .then(t=>
+                    setTodoList(prevTodo=> [...prevTodo,{
+                      id:nanoid(),
+                    name:t.dish,
+                  status:false}]) )
+     
+  }
+
   return ( 
   <>  
           <Head>
@@ -113,19 +124,20 @@ export default function IndexPage() {
 <link rel="manifest" href="/site.webmanifest"></link>
       
       </Head>  
-    <header>
-    <div className='flex justify-center items-center my-5 gap-1 px-5'>
+    <header className='bg-neutral-50 shadow-xl'>
+    <div className='flex justify-center items-center py-5 mb-5 gap-1 px-5'>
     <Image src='/logo.svg' width={100} height={100}  className='rounded-full'/>
     <h1 className='text-4xl md:text-7xl font-bold text-center my-5 text-indigo-600 '>TODO</h1>
     </div>
 </header>
-  
- 
-  <div className="flex justify-center px-5">
+  <div className="flex justify-center px-5 gap-1">
+  <button type='button' onClick={addRadomItem} className='bg-neutral-50 shadow-lg shadow-neutral-900/30 border-1 transition  text-neutral-50 px-3 text-lg font-semibold hover:bg-neutral-200  active:bg-neutral-3 00  rounded-lg'  >
+    🎲
+  </button>
 <InputForm data={inputText} OnInput={handleInput} OnAdd={handleAddItem}/>
   
   </div>
-  <div className='flex justify-center items-center gap-1 my-3 px-5'>
+  <div className='flex justify-center flex-wrap items-center gap-1 my-3 px-5'>
  {renderFilters()}
  <button className='bg-red-500 border  text-neutral-50 px-3 text-lg font-semibold hover:bg-red-600 transition active:bg-red-700 h-20 rounded-lg' onClick={handleClear}>
     Clear All
