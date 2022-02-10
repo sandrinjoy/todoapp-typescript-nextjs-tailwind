@@ -16,9 +16,8 @@ const FILTER_MAP={
   Undone:todo=>!todo.status
 }
 const FILTER_NAMES=Object.keys(FILTER_MAP)
-
+let t=0;
 export default function IndexPage() {
-
 
   const [todoList,setTodoList] =useState<Itodo[] | []>([])
   const [filter,setFilter]=useState<Filters>('All')
@@ -80,9 +79,9 @@ export default function IndexPage() {
 
   }
   const  renderFilters = () :JSX.Element[]=> {
-    return FILTER_NAMES.map((x:Filters)=>{
+    return FILTER_NAMES.map((x:Filters,index:number)=>{
     return  (
-        <button type='button'  name={x} onClick={()=>handleFilter(x)} className={filter!==x?'font-semibold text-sm px-5 py-2 text-indigo-700 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100':'text-sm font-semibold py-2  px-5 text-neutral-50 bg-indigo-500 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100'}>
+        <button type='button' key={index} name={x} onClick={()=>handleFilter(x)} className={filter!==x?'font-semibold text-sm px-5 py-2 text-indigo-700 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100':'text-sm font-semibold py-2  px-5 text-neutral-50 bg-indigo-500 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100'}>
          {x} ({todoList?.filter(FILTER_MAP[x]).length})
         </button>
       )
@@ -100,17 +99,20 @@ export default function IndexPage() {
   
       
   }
-  const addRadomItem = () =>{
-  fetch('https://random-data-api.com/api/food/random_food')
-                  .then(res=>res.json())
-                  .then(t=>
-                    setTodoList(prevTodo=> [...prevTodo,{
-                      id:nanoid(),
-                    name:t.dish,
-                  status:false}]) )
-     
+  
+  const addRandomItem= () =>{
+    const now=Date.now()
+    if((now-t)>1000){
+    fetch('https://random-data-api.com/api/food/random_food')
+    .then(res=>res.json())
+    .then(t=>
+      setTodoList(prevTodo=> [...prevTodo,{
+        id:nanoid(),
+      name:t.dish,
+    status:false}]) )
+    t=now
+      }
   }
-
   return ( 
   <>  
           <Head>
@@ -131,7 +133,7 @@ export default function IndexPage() {
     </div>
 </header>
   <div className="flex justify-center px-5 gap-1">
-  <button type='button' onClick={addRadomItem} className='bg-neutral-50 shadow-lg shadow-neutral-900/30 border-1 transition  text-neutral-50 px-3 text-lg font-semibold hover:bg-neutral-200  active:bg-neutral-3 00  rounded-lg'  >
+  <button type='button' onClick={addRandomItem} className='bg-neutral-50 shadow-lg shadow-neutral-900/30 border-1 transition  text-neutral-50 px-3 text-lg font-semibold hover:bg-neutral-200  active:bg-neutral-3 00  rounded-lg'  >
     🎲
   </button>
 <InputForm data={inputText} OnInput={handleInput} OnAdd={handleAddItem}/>
