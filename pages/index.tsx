@@ -82,7 +82,7 @@ export default function IndexPage() {
   const  renderFilters = () :JSX.Element[]=> {
     return FILTER_NAMES.map((x:Filters)=>{
     return  (
-        <button type='button'  name={x} onClick={()=>handleFilter(x)} className={filter!==x?'font-semibold h-20 px-5 text-indigo-700 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100':'font-semibold h-20 px-5 text-neutral-50 bg-indigo-500 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100'}>
+        <button type='button'  name={x} onClick={()=>handleFilter(x)} className={filter!==x?'font-semibold text-sm px-5 py-2 text-indigo-700 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100':'text-sm font-semibold py-2  px-5 text-neutral-50 bg-indigo-500 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100'}>
          {x} ({todoList?.filter(FILTER_MAP[x]).length})
         </button>
       )
@@ -139,23 +139,12 @@ export default function IndexPage() {
   </div>
   <div className='flex justify-center flex-wrap items-center gap-1 my-3 px-5'>
  {renderFilters()}
- <button className='bg-red-500 border  text-neutral-50 px-3 text-lg font-semibold hover:bg-red-600 transition active:bg-red-700 h-20 rounded-lg' onClick={handleClear}>
+ <button className='bg-red-500 border  text-neutral-50 px-3 text-sm py-2 font-semibold hover:bg-red-600 transition active:bg-red-700 rounded-lg' onClick={handleClear}>
     Clear All
   </button>
 </div>
-  <div className='flex flex-col justify-center items-center px-3'>
-  <div  className='my-2 grid  grid-cols-2 w-8/12 mx-auto'>
-  <div className='flex justify-items-end gap-3'> 
-  <span>name</span> 
-  </div>
-  <div>
-   <div className=' grid  grid-cols-3 gap-4'>
-     <span>Done</span>
-     <span>Delete</span>
-     <span>Edit</span>
-     </div>
-    </div>
-    </div>
+  <div className='flex flex-col justify-center items-center px-3 '>
+ 
     {renderList()}
   </div>
 </>

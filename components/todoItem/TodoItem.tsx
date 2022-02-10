@@ -15,26 +15,28 @@ interface IProps {
             setInputText(e.target.value)
     }
   return (
-    <div  className='my-2 grid  grid-cols-2 w-8/12 mx-auto'>
-    <div className={item.status?`flex justify-items-end gap-3 italic font-semibold text-green-500`:`flex justify-items-end gap-3  `}>   <span>{item.name}</span></div>
-      <div className=' grid  grid-cols-3 gap-4'>
+    <div  className='my-2  mx-auto flex flex-col justify-center items-center  pb-5  border-b '>
+    <div className={item.status?`flex justify-center items-center  gap-3 italic font-semibold text-green-500`:`flex justify-center items-center gap-3  `}>  
+        <input type='checkbox' checked={item.status} onChange={(e)=>OnComplete(e,item.id)} className=''/>
+           <span className='font-semibold text-lg'>{item.name}</span></div>
+      <div className=' flex gap-10 mt-3'>
       <div>
-      <input type='checkbox' checked={item.status} onChange={(e)=>OnComplete(e,item.id)} className='w-full'>
+
          
-         
-         </input>
       </div>
-      <button className='  '  onClick={()=>OnRemove(item.id)}>
-         ❌
-       </button>
-      <div className='grid  grid-cols-2 ' >
-      <input type='text' defaultValue={item.name} onChange={handleItemText}/>
-      <button className='px-3 '  onClick={()=>OnEdit(item.id,inputText)}>
+     
+      <div className='flex justify-center gap-3 ' >
+      <input className='font-bold italic text-neutral-800 placeholder:text-neutral-400 px-8  w-full  shadow-lg border  border-neutral-200  focus:outline-none items-center' type='text' defaultValue={item.name} onChange={handleItemText}/>
+      <button className=''  onClick={()=>OnEdit(item.id,inputText)}>
          
          🛠️ 
        </button>
       </div>
+      <button className='  '  onClick={()=>OnRemove(item.id)}>
+         ❌
+       </button>
       </div>
+     
        </div>
   );
 }
