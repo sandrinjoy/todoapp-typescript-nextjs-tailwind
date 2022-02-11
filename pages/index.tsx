@@ -1,59 +1,39 @@
 import Head from 'next/head'
-import TodoItem from '../components/todoItem/TodoItem'
-import { ChangeEvent, FormEvent, useState,useEffect }  from 'react'
-import InputForm from '../components/InputForm'
-import { nanoid } from 'nanoid'
+import { ChangeEvent, useState,useEffect }  from 'react'
 import Image from 'next/image'
+
+
+import TodoItem from '../components/todoItem/TodoItem'
+import NewItem from '../components/NewItem';
+import ClearTodo from '../components/ClearTodo';
+
 export interface Itodo {
   id: string;
   name: string;
   status:boolean;
 }
 type Filters=('All' | 'Done' | 'Undone');
+
+
 const FILTER_MAP={
-  All:()=>true,
+  All: ():Function=> boolean =>true,
   Done:todo=>todo.status,
   Undone:todo=>!todo.status
 }
 const FILTER_NAMES=Object.keys(FILTER_MAP)
-let t=0;
+
 export default function IndexPage() {
 
   const [todoList,setTodoList] =useState<Itodo[] | []>([])
   const [filter,setFilter]=useState<Filters>('All')
-  const [inputText,setInputText] =useState<string>('')
-
-  const handleAddItem = (e:FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if(inputText!==null &&  inputText.length!==0)
-       {
-        setTodoList(prevTodo=> [...prevTodo,{
-          id:nanoid(),
-        name:inputText,
-      status:false}])
-        
-      setInputText('')
-       }
-  }
-  const handleFilter=(e:Filters)=>{
+  const handleFilter:(e:Filters)=>void=(e)=>{
     setFilter(e)     
   }
-
-
-  const handleClear = () =>{
-    
-    setInputText('')
-    setTodoList([])
-  }
-  const handleInput = (e:ChangeEvent<HTMLInputElement>) =>{
-   
-    setInputText(e.target.value)
-  }
-  const handleRemoveItem = (id:string) =>{
+  const handleRemoveItem:(id:string)=>void = (id) =>{
         setTodoList(todoList.filter(item =>item['id']!==id))
 
   }
-  const handleEditItem = (id:string,text:string) =>{
+  const handleEditItem:(id:string,text:string)=>void = (id,text) =>{
     let temp = [...todoList]
         temp.map((item,index)=>{
           if(item.id===id){
@@ -63,7 +43,7 @@ export default function IndexPage() {
         setTodoList(temp)
 
   }
-  const handleComplete = (e:ChangeEvent<HTMLInputElement>,id:string) =>{
+  const handleComplete:(e:ChangeEvent<HTMLInputElement>,id:string)=>void = (e,id) =>{
     let temp = [...todoList]
         temp.map((item,index)=>{
           if(item.id===id){
@@ -78,7 +58,7 @@ export default function IndexPage() {
         setTodoList(temp)
 
   }
-  const  renderFilters = () :JSX.Element[]=> {
+  const  renderFilters:()=>JSX.Element[] = () => {
     return FILTER_NAMES.map((x:Filters,index:number)=>{
     return  (
         <button type='button' key={index} name={x} onClick={()=>handleFilter(x)} className={filter!==x?'font-semibold text-sm px-5 py-2 text-indigo-700 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100':'text-sm font-semibold py-2  px-5 text-neutral-50 bg-indigo-500 transition-colors duration-150 border border-indigo-500 rounded-lg focus:shadow-outline hover:bg-indigo-500 hover:text-indigo-100'}>
@@ -87,7 +67,7 @@ export default function IndexPage() {
       )
     })
   }
-  const  renderList = () :JSX.Element[] => {
+  const  renderList :()=>JSX.Element[]= () => {
     return todoList
       ?.filter(FILTER_MAP[filter])
       ?.map((x: Itodo)=>{
@@ -100,19 +80,7 @@ export default function IndexPage() {
       
   }
   
-  const addRandomItem= () =>{
-    const now=Date.now()
-    if((now-t)>1000){
-    fetch('https://random-data-api.com/api/food/random_food')
-    .then(res=>res.json())
-    .then(t=>
-      setTodoList(prevTodo=> [...prevTodo,{
-        id:nanoid(),
-      name:t.dish,
-    status:false}]) )
-    t=now
-      }
-  }
+ 
   return ( 
   <>  
           <Head>
@@ -126,27 +94,26 @@ export default function IndexPage() {
 <link rel="manifest" href="/site.webmanifest"></link>
       
       </Head>  
-    <header className='bg-neutral-50 shadow-xl'>
+    <header className='bg-neutral-50 shadow-lg border  w-8/12 mx-auto my-5'>
     <div className='flex justify-center items-center py-5 mb-5 gap-1 px-5'>
     <Image src='/logo.svg' width={100} height={100}  className='rounded-full'/>
-    <h1 className='text-4xl md:text-7xl font-bold text-center my-5 text-indigo-600 '>TODO</h1>
+    <div className="text-4xl md:text-7xl font-light text-center my-5 text-indigo-600">
+  <h1 className="  bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 py-5">
+  Todo App
+  </h1>
+</div>
+    
     </div>
+    <h2 className='text-xl md:text-3xl font-light text-center my-5 text-indigo-600 '>Simple &amp; convinient.</h2>
 </header>
   <div className="flex justify-center px-5 gap-1">
-  <button type='button' onClick={addRandomItem} className='bg-neutral-50 shadow-lg shadow-neutral-900/30 border-1 transition  text-neutral-50 px-3 text-lg font-semibold hover:bg-neutral-200  active:bg-neutral-3 00  rounded-lg'  >
-    🎲
-  </button>
-<InputForm data={inputText} OnInput={handleInput} OnAdd={handleAddItem}/>
-  
+   <NewItem setTodoList={setTodoList}/>
   </div>
   <div className='flex justify-center flex-wrap items-center gap-1 my-3 px-5'>
  {renderFilters()}
- <button className='bg-red-500 border  text-neutral-50 px-3 text-sm py-2 font-semibold hover:bg-red-600 transition active:bg-red-700 rounded-lg' onClick={handleClear}>
-    Clear All
-  </button>
+ <ClearTodo  setTodoList={setTodoList}/>
 </div>
   <div className='flex flex-col justify-center items-center px-3 '>
- 
     {renderList()}
   </div>
 </>
