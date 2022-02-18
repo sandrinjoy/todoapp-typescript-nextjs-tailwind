@@ -1,4 +1,4 @@
-import React,{ChangeEvent, useState} from 'react'
+import React,{ChangeEvent, useState,useEffect} from 'react'
 import {Itodo} from '../../pages/index'
 interface IProps {
   item:Itodo;
@@ -14,11 +14,28 @@ interface IProps {
     const handleItemText =(e:ChangeEvent<HTMLInputElement>)=>{
             setInputText(e.target.value)
     }
+    const handleSubmit = (event:any) =>{
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        event.target.blur();
+      }
+    }
+    useEffect(() => {
+      OnEdit(item.id,inputText)
+    }, [inputText])
+    
   return (
     <div  className='my-2  mx-auto flex flex-col justify-center items-center  pb-5  border-b '>
-    <div className={item.status?`flex justify-center items-center  gap-3 italic font-semibold text-green-500`:`flex justify-center items-center gap-3  `}>  
-        <input type='checkbox' checked={item.status} onChange={(e)=>OnComplete(e,item.id)} className=''/>
-           <span className='font-semibold text-lg'>{item.name}</span></div>
+    <div className='flex justify-center items-center  gap-3'>  
+        <input type='checkbox' checked={item.status} onChange={(e)=>OnComplete(e,item.id)} className='p-3 border-green-500'/>
+        <input  className={item.status? 
+        `font-semibold text-green-600   placeholder:text-neutral-400 px-8  w-full  shadow-sm border-none    focus:outline-none `:
+          `font-semibold  text-neutral-800 placeholder:text-neutral-400 px-8  w-full  shadow border-none    focus:outline-none `} type='text' defaultValue={item.name} onChange={handleItemText} onKeyUp={handleSubmit}/>
+           
+        <button className='  '  onClick={()=>OnRemove(item.id)}>
+         {item.status?'❎': '❌'}
+       </button>
+           </div>
       <div className=' flex gap-10 mt-3'>
       <div>
 
@@ -26,15 +43,10 @@ interface IProps {
       </div>
      
       <div className='flex justify-center gap-3 ' >
-      <input className='font-bold italic text-neutral-800 placeholder:text-neutral-400 px-8  w-full  shadow-lg border  border-neutral-200  focus:outline-none items-center' type='text' defaultValue={item.name} onChange={handleItemText}/>
-      <button className=''  onClick={()=>OnEdit(item.id,inputText)}>
-         
-         🛠️ 
-       </button>
+     
+     
       </div>
-      <button className='  '  onClick={()=>OnRemove(item.id)}>
-         ❌
-       </button>
+     
       </div>
      
        </div>
